@@ -1,0 +1,103 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model CARPOOLUSER {
+  CarpoolUserID Int         @id @default(autoincrement())
+  Name          String      @db.VarChar(100)
+  Email         String      @db.VarChar(100)
+  Password      String      @db.VarChar(100)
+  PhoneNumber   String      @db.VarChar(20)
+  CarModel      String?     @db.VarChar(100)
+  CarPlateNum   String?     @db.VarChar(20)
+  FEEDBACK      FEEDBACK[]
+  POST          POST[]
+  POST_USER     POST_USER[]
+}
+
+model FEEDBACK {
+  CarpoolUserID Int
+  PostID        Int
+  Feedback      String?     @db.VarChar(500)
+  CARPOOLUSER   CARPOOLUSER @relation(fields: [CarpoolUserID], references: [CarpoolUserID], onDelete: NoAction, onUpdate: NoAction, map: "FEEDBACK_ibfk_1")
+  POST          POST        @relation(fields: [PostID], references: [PostID], onDelete: NoAction, onUpdate: NoAction, map: "FEEDBACK_ibfk_2")
+
+  @@id([CarpoolUserID, PostID])
+  @@index([PostID], map: "PostID")
+}
+
+model POST {
+  PostID                Int                     @id @default(autoincrement())
+  CreatorID             Int
+  EstimatedStartingTime DateTime                @db.DateTime(0)
+  HasStartedOrNot       POST_HasStartedOrNot?   @default(No)
+  StartingTime          DateTime?               @db.DateTime(0)
+  EndingTime            DateTime?               @db.DateTime(0)
+  StartingLocation      String                  @db.VarChar(200)
+  EndingLocation        String                  @db.VarChar(200)
+  NumOfMax              Int
+  NumOfJoined           Int?                    @default(1)
+  Gender                POST_Gender
+  DrunkAllowed          POST_DrunkAllowed
+  SmokingAllowed        POST_SmokingAllowed
+  HugeLuggageAllowed    POST_HugeLuggageAllowed
+  PetAllowed            POST_PetAllowed
+  PostDescription       String                  @db.VarChar(200)
+  FEEDBACK              FEEDBACK[]
+  CARPOOLUSER           CARPOOLUSER             @relation(fields: [CreatorID], references: [CarpoolUserID], onDelete: NoAction, onUpdate: NoAction, map: "POST_ibfk_1")
+  POST_USER             POST_USER[]
+
+  @@index([CreatorID], map: "CreatorID")
+}
+
+model POST_USER {
+  PostID        Int
+  CarpoolUserID Int
+  Role          POST_USER_Role
+  POST          POST           @relation(fields: [PostID], references: [PostID], onDelete: NoAction, onUpdate: NoAction, map: "POST_USER_ibfk_1")
+  CARPOOLUSER   CARPOOLUSER    @relation(fields: [CarpoolUserID], references: [CarpoolUserID], onDelete: NoAction, onUpdate: NoAction, map: "POST_USER_ibfk_2")
+
+  @@id([PostID, CarpoolUserID])
+  @@index([CarpoolUserID], map: "CarpoolUserID")
+}
+
+enum POST_USER_Role {
+  Driver
+  Passenger
+}
+
+enum POST_HasStartedOrNot {
+  Yes
+  No
+}
+
+enum POST_Gender {
+  Male
+  Female
+  Any
+}
+
+enum POST_DrunkAllowed {
+  Yes
+  No
+}
+
+enum POST_SmokingAllowed {
+  Yes
+  No
+}
+
+enum POST_HugeLuggageAllowed {
+  Yes
+  No
+}
+
+enum POST_PetAllowed {
+  Yes
+  No
+}
