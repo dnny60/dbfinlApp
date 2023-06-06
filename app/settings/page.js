@@ -8,7 +8,7 @@ import { useSession } from "next-auth/react";
 
 const Settingpage = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { data: session, status } = useSession();
+  const { data: session, status, update } = useSession();
 
   const toggle = () => {
     setIsOpen(!isOpen);
@@ -19,7 +19,7 @@ const Settingpage = () => {
         <BrowserRouter>
           <Navbar toggle={toggle} />
           <Sidebar isOpen={isOpen} toggle={toggle} />
-          <Setting parm={session.user} />
+          <Setting parm={session} parm2={update} />
         </BrowserRouter>
       </>
     );
