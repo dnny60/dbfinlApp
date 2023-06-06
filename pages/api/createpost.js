@@ -79,10 +79,8 @@ export default async function handler(req, res) {
         Role: Role,
       },
     });
-
-    return res
-      .status(200)
-      .json({ message: "建立post", post: newPost, postUser: newPostUser });
+    console.log({ message: "建立post", post: newPost, postUser: newPostUser });
+    return res.status(200).json({ post: newPost, postUser: newPostUser });
   } catch (error) {
     return res.status(500).json({ message: "發生錯誤", error: error.message });
   }

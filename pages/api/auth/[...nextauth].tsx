@@ -65,11 +65,23 @@ export const authOptions: NextAuthOptions = {
           console.log(isPasswordValid);
           return null;
         }
+        var model = "";
+        var plate = "";
+        if (user.CarModel != null) {
+          model = user.CarModel;
+        }
+        if (user.CarPlateNum != null) {
+          plate = user.CarModel;
+        }
 
         return {
           id: user.CarpoolUserID,
           email: user.Email,
           name: user.Name,
+          password: user.Password,
+          phone: user.PhoneNumber,
+          carModel: model,
+          licensePlate: plate,
         };
       },
     }),

@@ -4,12 +4,9 @@ import { Inter } from "next/font/google";
 import { SessionProvider } from "next-auth/react";
 import { ReactNode } from "react";
 import { AppProps } from "next/app";
+import { BrowserRouter } from "react-router-dom";
 
 const inter = Inter({ subsets: ["latin"] });
-interface IProps {
-  children: ReactNode;
-  session: any;
-}
 
 // export const metadata = {
 //   title: "Create Next App",
