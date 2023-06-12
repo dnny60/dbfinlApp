@@ -21,7 +21,7 @@ export const Container = styled.div`
     right: 0;
     bottom: 0;
     left: 0;
-    background-image: url("${image}");
+    background-image: url("/images/image.jpg");
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
@@ -121,7 +121,7 @@ export const Listcotainer = styled.div`
   display: flex;
   justify-content: space-between;
   flex-direction: row;
-  justify-content: flex-start;
+  justify-content: center;
   flex-wrap: wrap;
   gap: 40px;
   color: white;
@@ -214,8 +214,10 @@ export const Infowrapper = styled.div`
 
 export const Carform = styled.div`
   display: flex;
+
   flex-direction: column; // Align items in a column
   align-items: right; // Center items horizontally
+
   padding: 20px;
   border-radius: 10px; // Round the corners
   background-color: #f6e8ce; // Set the background color to white

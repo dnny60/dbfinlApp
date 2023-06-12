@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Select from "react-select";
 // import {BsCarFront ,BsFillPersonFill}from 'react-icons/bs'
 import axios from "axios";
+import moment from "moment";
 import {
   Swrapper,
   SearchBar,
@@ -28,111 +29,65 @@ import { useSession } from "next-auth/react";
 
 // Mock data
 const MOCK_RIDESHARES = [
-  {
-    rideshareid: 1,
-    creatorName: "John Doe",
-
-    drunkAllowed: "no",
-    smokeAllowed: "no",
-    petAllowed: "no",
-    bigLuggageAllowed: "yes",
-    description: "Looking for passengers to share the ride.",
-    status: "Not Started",
-  },
-  {
-    rideshareid: 2,
-    creatorName: "Jane Doe",
-    creatorPhone: "098-765-4321",
-    startingLocation: "Suburbia",
-    endingLocation: "信義",
-    estimatedStartingTime: "2023-05-24 09:00:00",
-    NumOfMax: 4,
-    NumOfJoined: 2,
-    userRole: "passenger",
-    drunkAllowed: "yes",
-    smokeAllowed: "no",
-    petAllowed: "yes",
-    bigLuggageAllowed: "no",
-    description: "Looking for a ride to the city center.",
-    status: "Not Started",
-  },
-  {
-    rideshareid: 1,
-    creatorName: "John Doe",
-    creatorPhone: "123-456-7890",
-    startingLocation: "北車",
-    endingLocation: "Suburbia",
-    estimatedStartingTime: "2023-05-24 09:00:00",
-    NumOfMax: 5,
-    NumOfJoined: 3,
-    userRole: "driver",
-    drunkAllowed: "no",
-    smokeAllowed: "no",
-    petAllowed: "no",
-    bigLuggageAllowed: "yes",
-    description: "Looking for passengers to share the ride.",
-    status: "Not Started",
-  },
-  {
-    rideshareid: 1,
-    creatorName: "John Doe",
-    creatorPhone: "123-456-7890",
-    startingLocation: "City Center",
-    endingLocation: "Suburbia",
-    estimatedStartingTime: "2023-05-24 09:00:00",
-    NumOfMax: 5,
-    NumOfJoined: 3,
-    userRole: "driver",
-    drunkAllowed: "no",
-    smokeAllowed: "no",
-    petAllowed: "no",
-    bigLuggageAllowed: "yes",
-    description: "Looking for passengers to share the ride.",
-    status: "Not Started",
-  },
-  {
-    rideshareid: 1,
-    creatorName: "John Doe",
-    creatorPhone: "123-456-7890",
-    startingLocation: "政大",
-    endingLocation: "信義",
-    estimatedStartingTime: "2023-05-24 09:00:00",
-    NumOfMax: 5,
-    NumOfJoined: 3,
-    userRole: "driver",
-    drunkAllowed: "no",
-    smokeAllowed: "no",
-    petAllowed: "no",
-    bigLuggageAllowed: "yes",
-    description: "Looking for passengers to share the ride.",
-    status: "Not Started",
-  },
-  {
-    rideshareid: 1,
-    creatorName: "John Doe",
-    creatorPhone: "123-456-7890",
-
-    endingLocation: "Suburbia",
-    estimatedStartingTime: "2023-05-24 09:00:00",
-    NumOfMax: 5,
-    NumOfJoined: 3,
-    userRole: "driver",
-    drunkAllowed: "no",
-    smokeAllowed: "no",
-    petAllowed: "no",
-    bigLuggageAllowed: "yes",
-    description: "Looking for passengers to share the ride.",
-    status: "Not Started",
-  },
   // ...add more pre-filled data here...
 ];
 
 // 共乘列表组件
-const Carpool = ({ rideshares = MOCK_RIDESHARES, onFilter }) => {
+const Carpool = ({ rideshares = MOCK_RIDESHARES, onFilter, parm }) => {
+  if (!parm) {
+    return;
+  }
   const router = useRouter();
   console.log(rideshares);
   const [displayedRideshares, setDisplayedRideshares] = useState(rideshares);
-  const [abc, setAbc] = useState();
+  const updateDisplayedRideshares = (newRideshares) => {
+    setDisplayedRideshares(newRideshares);
+  };
+
+  // ...
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("/api/searchCreatedPost", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ parm }),
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          console.log(data);
+
+          if (data) {
+            const ridesharesData = data.map((item) => ({
+              PostID: item.PostID,
+              Name: item.CARPOOLUSER.Name,
+              POST_USER: item.POST_USER,
+              StartingLocation: item.StartingLocation,
+              EndingLocation: item.EndingLocation,
+              EstimatedStartingTime: item.EstimatedStartingTime,
+              NumOfJoined: item.NumOfJoined,
+              NumOfMax: item.NumOfMax,
+            }));
+            setDisplayedRideshares(ridesharesData);
+          } else {
+            console.log("No data received from the API.");
+          }
+        } else {
+          console.log("Error occurred while fetching data.");
+        }
+      } catch (error) {
+        console.log("An error occurred:", error);
+      }
+    };
+
+    fetchData();
+  }, [parm]);
+
+  // ...
 
   const [searchQuery, setSearchQuery] = useState("");
   //const [joinedUsers, setJoinedUsers] = useState([]);
@@ -156,42 +111,14 @@ const Carpool = ({ rideshares = MOCK_RIDESHARES, onFilter }) => {
     setDisplayedRideshares(rideshares);
   };
 
-  const [selectedOptions, setSelectedOptions] = useState([]);
-
-  const handleFilter = async (selectedOptions) => {
-    setSelectedOptions(selectedOptions); // 在狀態中設置所選選項
-    const filters = selectedOptions.map((option) => option.value);
-
-    // 將篩選器發送到後端
-    const res = await axios.post("/api/searchpost", { filters });
-
-    // 假設你的後端返回匹配的共乘
-    // 現在可以對返回的共乘做些什麼
-    console.log(res.data.user[0].EndingLocation);
-    console.log(res.data);
-    console.log(res.data.user[0].POST_USER[0].Role);
-
-    setAbc(res.data.user[0].EndingLocation);
-    setDisplayedRideshares(res.data.user);
-  };
-
   return (
     <Container>
       <CarH1>共乘列表</CarH1>
       <TitleP>
-        {/* <FilterOptions onFilter={onFilter} /> */}
-        <CarGroup>
-          <CarH2>篩選:</CarH2>
-          <Select
-            isMulti
-            name="filters"
-            options={options}
-            className="basic-multi-select"
-            classNamePrefix="select"
-            styles={customStyles}
-            onChange={handleFilter}
-          />
-        </CarGroup>
+        <FilterOptions
+          onFilter={onFilter}
+          updateRideshares={updateDisplayedRideshares}
+        />
       </TitleP>
       <BtnWrapper>
         <CarButton onClick={() => router.push("/createCarpool")}>
@@ -208,6 +135,11 @@ const Carpool = ({ rideshares = MOCK_RIDESHARES, onFilter }) => {
       </Swrapper>
       <Listcotainer>
         {displayedRideshares.map((rideshare, index) => (
+          <RideshareItem key={index} {...rideshare} />
+        ))}
+      </Listcotainer>
+      <Listcotainer>
+        {rideshares.map((rideshare, index) => (
           <RideshareItem key={index} {...rideshare} />
         ))}
       </Listcotainer>
@@ -239,14 +171,19 @@ const RideshareItem = ({
   try {
     console.log(POST_USER[0].Role);
     var Role = POST_USER[0].Role;
-    var poolDate = new Date(EstimatedStartingTime);
-    EstimatedStartingTime = poolDate
-      .toISOString()
-      .slice(0, 19)
-      .replace("T", " ");
-    console.log(EstimatedStartingTime);
+    // var poolDate = new Date(EstimatedStartingTime);
+    // EstimatedStartingTime = poolDate
+    //   .toISOString()
+    //   .slice(0, 19)
+    //   .replace("T", " ");
+    var formattedDate = moment(EstimatedStartingTime).format(
+      "YYYY-MM-DD HH:mm:ss"
+    );
+    console.log(formattedDate);
   } catch (error) {
     var Role = "Passenger";
+    var formattedDate = "error";
+    console.log(error);
   }
   const joinPool = async () => {
     var joinRole;
@@ -285,7 +222,7 @@ const RideshareItem = ({
         <Infowrapper>
           <CarP>出發地: {StartingLocation}</CarP>
           <CarP>目的地: {EndingLocation}</CarP>
-          <CarP>預計出發時間: {EstimatedStartingTime}</CarP>
+          <CarP>預計出發時間: {formattedDate}</CarP>
           <CarP>
             目前人數: {NumOfJoined}/{NumOfMax}
           </CarP>
@@ -303,10 +240,10 @@ const RideshareItem = ({
 
 // 筛选选项组件
 const options = [
-  { value: "drunkAllowed", label: "醉酒允許" },
-  { value: "smokeAllowed", label: "煙味允許" },
-  { value: "petAllowed", label: "寵物允許" },
-  { value: "bigLuggageAllowed", label: "大型行李允許" },
+  { value: { DrunkAllowed: "Yes" }, label: "醉酒允許" },
+  { value: { SmokingAllowed: "Yes" }, label: "煙味允許" },
+  { value: { PetAllowed: "Yes" }, label: "寵物允許" },
+  { value: { HugeLuggageAllowed: "Yes" }, label: "大型行李允許" },
 ];
 
 const customStyles = {
@@ -317,19 +254,38 @@ const customStyles = {
   }),
 };
 
-const FilterOptions = () => {
+const FilterOptions = ({ updateRideshares }) => {
   const [selectedOptions, setSelectedOptions] = useState([]);
 
-  const handleFilter = async (selectedOptions) => {
+  const handleFilter = (selectedOptions) => {
     setSelectedOptions(selectedOptions); // 在狀態中設置所選選項
     const filters = selectedOptions.map((option) => option.value);
 
     // 將篩選器發送到後端
-    const res = await axios.post("/api/searchpost", { filters });
-
-    // 假設你的後端返回匹配的共乘
-    // 現在可以對返回的共乘做些什麼
-    console.log(res.data);
+    axios
+      .post("/api/searchpost", { filters })
+      .then((response) => {
+        if (response.status === 200) {
+          const data = response.data.user;
+          console.log(data);
+          const ridesharesData = data.map((item) => ({
+            PostID: item.PostID,
+            Name: item.CARPOOLUSER.Name,
+            POST_USER: item.POST_USER,
+            StartingLocation: item.StartingLocation,
+            EndingLocation: item.EndingLocation,
+            EstimatedStartingTime: item.EstimatedStartingTime,
+            NumOfJoined: item.NumOfJoined,
+            NumOfMax: item.NumOfMax,
+          }));
+          updateRideshares(ridesharesData);
+        } else {
+          console.log("Error occurred while fetching data.");
+        }
+      })
+      .catch((error) => {
+        console.log("An error occurred:", error);
+      });
   };
 
   return (

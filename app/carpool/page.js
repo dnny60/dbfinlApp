@@ -5,8 +5,10 @@ import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
 import { BrowserRouter } from "react-router-dom";
 import axios from "axios";
+import { useSession } from "next-auth/react";
 const CarpoolPage = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const { data: session } = useSession();
 
   const toggle = () => {
     setIsOpen(!isOpen);
@@ -25,7 +27,7 @@ const CarpoolPage = () => {
       <BrowserRouter>
         <Navbar toggle={toggle} />
         <Sidebar isOpen={isOpen} toggle={toggle} />
-        <Carpool onFilter={handleFilter} />
+        <Carpool onFilter={handleFilter} parm={session} />
       </BrowserRouter>
     </>
   );

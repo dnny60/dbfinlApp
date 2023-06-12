@@ -16,12 +16,14 @@ import {
   HeaderWrapper,
   Buttonwrap,
 } from "./PostSectionElements";
+import { useRouter } from "next/navigation";
 
 import axios from "axios"; // assume you are using axios
 
 // import useUser from '...' // import your hook for user information
 
 const PostSection = ({ param }) => {
+  const router = useRouter();
   const [post, setPost] = useState({
     rideshareid: 1,
     creatorName: "John Doe",
@@ -142,13 +144,15 @@ const PostSection = ({ param }) => {
           {Ontheroad ? (
             <>
               <Buttonwrap>
-                <Button to="/feedback">若已抵達目的地，歡迎點我填寫回饋</Button>
+                <Button onClick={() => router.push("/thankyou")}>
+                  若已抵達目的地，歡迎點我填寫回饋
+                </Button>
               </Buttonwrap>
             </>
           ) : (
             <>
               <Buttonwrap>
-                <Button to="/discover">點擊退出此次共乘</Button>
+                <Button to="/ridesharerecord">點擊退出此次共乘</Button>
               </Buttonwrap>
             </>
           )}

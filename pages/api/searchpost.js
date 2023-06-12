@@ -11,42 +11,15 @@ export default async function handler(req, res) {
   try {
     const user = await prisma.POST.findMany({
       include: {
+        CARPOOLUSER: true,
         POST_USER: true,
       },
+      where: {
+        AND: filters,
+      },
     });
-    return res.status(200).json({ user });
-    if (filters == "allAllowed") {
-      const user = await prisma.POST.findMany({});
-      return res.status(200).json({ user });
-    } else if (filters == "drunkAllowed") {
-      const user = await prisma.POST.findMany({
-        where: {
-          DrunkAllowed: "Yes",
-        },
-      });
-      return res.status(200).json({ user });
-    } else if (filters == "smokeAllowed") {
-      const user = await prisma.POST.findMany({
-        where: {
-          SmokingAllowed: "Yes",
-        },
-      });
-      return res.status(200).json({ user });
-    } else if (filters == "petAllowed") {
-      const user = await prisma.POST.findMany({
-        where: {
-          PetAllowed: "Yes",
-        },
-      });
-      return res.status(200).json({ user });
-    } else if (filters == "bigLuggageAllowed") {
-      const user = await prisma.POST.findMany({
-        where: {
-          HugeLuggageAllowed: "Yes",
-        },
-      });
-      return res.status(200).json({ user });
-    }
+    console.log(user);
+    res.status(200).json({ user });
   } catch (error) {
     console.error("Error logging in:", error);
     res.status(500).json({ message: "Something went wrong" });

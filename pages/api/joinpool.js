@@ -16,7 +16,18 @@ export default async function handler(req, res) {
       },
     });
 
-    return res.status(200).json({ message: "join成功" });
+    const addJoined = await prisma.POST.update({
+      where: {
+        PostID: postId,
+      },
+      data: {
+        NumOfJoined: {
+          increment: 1,
+        },
+      },
+    });
+
+    return res.status(200).json({ message: "join成功", addJoined });
   } catch (error) {
     return res.status(500).json({ message: "發生錯誤", error: error.message });
   }

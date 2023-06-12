@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button } from "../ButtonElement";
 
-import Gif3 from "../../images/verified.gif";
+import Gif3 from "../../../public/images/verified.gif";
 import {
   FP,
   Fform,
@@ -13,10 +13,12 @@ import {
   FButton,
 } from "./FeedbackElements";
 //import axios from 'axios'; // assume you are using axios
+import { useRouter } from "next/navigation";
 
 // import useUser from '...' // import your hook for user information
 
 const Feedback = () => {
+  const router = useRouter();
   return (
     <>
       <Container>
@@ -34,7 +36,7 @@ const Feedback = () => {
           <FTextarea type="TextArea" placeholder=" 您的回饋意見"></FTextarea>
 
           <Buttonwrap>
-            <FButton type="submit" to="/thankyou">
+            <FButton type="submit" onClick={() => router.push("/thankyou")}>
               點我送出回饋意見
             </FButton>
           </Buttonwrap>

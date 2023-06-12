@@ -1,25 +1,26 @@
 "use client";
 import React, { useState } from "react";
-import PostSection from "../../components/PostSection";
-import Sidebar from "../../components/Sidebar";
-import Navbar from "../../components/Navbar";
+import Sidebar from "../Components/Sidebar";
+import Navbar from "../Components/Navbar";
+import Feedback from "../Components/Feedback";
 import { BrowserRouter } from "react-router-dom";
 
-const Postpage = ({ params }) => {
+const FeedbackPage = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggle = () => {
     setIsOpen(!isOpen);
   };
+
   return (
     <>
       <BrowserRouter>
         <Navbar toggle={toggle} />
 
-        <PostSection param={params} />
+        <Feedback />
       </BrowserRouter>
     </>
   );
 };
 
-export default Postpage;
+export default FeedbackPage;

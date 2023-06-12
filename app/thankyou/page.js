@@ -1,3 +1,4 @@
+"use client";
 import React, { useState } from "react";
 import Thankyou from "../components/Thankyou";
 import Sidebar from "../components/Sidebar";
@@ -13,7 +14,7 @@ const ThankyouPage = () => {
   return (
     <>
       <Navbar toggle={toggle} />
-      <Sidebar isOpen={isOpen} toggle={toggle} />
+
       <Thankyou />
     </>
   );
