@@ -125,6 +125,24 @@ const PostSection = ({ param, session }) => {
     }
   };
 
+  const endPost = async () => {
+    const PostID = param.id.toString();
+
+    try {
+      await fetch("/api/endPost", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ PostID }),
+      });
+
+      router.push("/feedback");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   if (isLoading) return <p>Loading...</p>;
   if (!data) return <p>No profile data</p>;
 
@@ -165,7 +183,7 @@ const PostSection = ({ param, session }) => {
           {Ontheroad ? (
             <>
               <Buttonwrap>
-                <Button onClick={() => router.push("/thankyou")}>
+                <Button onClick={endPost}>
                   若已抵達目的地，歡迎點我填寫回饋
                 </Button>
               </Buttonwrap>

@@ -47,8 +47,8 @@ const mockJoinedRideshares = [
 ];
 
 const mockRideshareFeedback = [
-  { postId: 1, userFeedback: ["good", "late", "safe"] },
-  { postId: 2, userFeedback: ["excellent", "comfortable"] },
+  { PostID: 1, Feedback: ["good", "late", "safe"] },
+  { PostID: 2, Feedback: ["excellent", "comfortable"] },
   // ...
 ];
 
@@ -123,6 +123,37 @@ const YourRecord = ({ parm }) => {
       } catch (error) {
         console.error("Error fetching data:", error);
       }
+
+      //feedback
+      try {
+        const response = await fetch("/api/getFeedback", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          // 如果有需要发送的数据，可以在此处添加
+          body: JSON.stringify({ parm }),
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch data");
+        }
+
+        const data = await response.json();
+        console.log(data);
+
+        // const feedbackData = data.map((item) => ({
+        //   // postId: 1, userFeedback: ["good", "late", "safe"]
+        //   postId: item.PostID,
+        //   userFeedback: item.FEEDBACK,
+        // }));
+
+        setRidesharefeedback(data);
+        console.log(Ridesharefeedback);
+        // setDisplayedRideshares(ridesharesData);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
     };
 
     fetchData();
@@ -150,9 +181,7 @@ const YourRecord = ({ parm }) => {
   const [displayedRideshares, setDisplayedRideshares] = useState(
     mockCreatedRideshares
   );
-  const [ridesharefeedback, setRidesharefeedback] = useState(
-    mockRideshareFeedback
-  );
+  const [ridesharefeedback, setRidesharefeedback] = useState([]);
 
   const navigate = useNavigate();
 
@@ -225,7 +254,6 @@ const YourRecord = ({ parm }) => {
             </Infowrapper>
           ))}
         </Carform>
-
         <Carform>
           <h1>Rideshares you've joined</h1>
           {joinedRideshares.map((rideshare) => (
@@ -247,23 +275,27 @@ const YourRecord = ({ parm }) => {
             </Infowrapper>
           ))}
         </Carform>
-
         {/* User feedback section */}
-        <Carform>
-          <h1>Your Feedback</h1>
-          {ridesharefeedback.map((feedback) => (
-            <Infowrapper key={feedback.id}>
-              <group>
-                <FP>貼文ID: {feedback.postId}</FP>
-                {feedback.userFeedback.map((feedback, index) => (
-                  <FP key={index}>
-                    回饋{index + 1}: {feedback}
-                  </FP>
-                ))}
-              </group>
-            </Infowrapper>
-          ))}
-        </Carform>
+
+        {ridesharefeedback && Array.isArray(ridesharefeedback) ? (
+          <Carform>
+            <h1>Your Feedback</h1>
+            {ridesharefeedback.map((feedback) => (
+              <Infowrapper key={feedback.PostID}>
+                <group>
+                  <FP>貼文ID: {feedback.PostID}</FP>
+                  {feedback.Feedback.map((item, index) => (
+                    <FP key={index}>
+                      回饋{index + 1}: {item}
+                    </FP>
+                  ))}
+                </group>
+              </Infowrapper>
+            ))}
+          </Carform>
+        ) : (
+          <p>Loading feedback...</p>
+        )}
       </Container>
     </>
   );
