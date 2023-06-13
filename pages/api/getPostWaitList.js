@@ -9,38 +9,35 @@ export default async function handler(req, res) {
   console.log(id);
 
   try {
-    const post = await prisma.POST.findFirst({
+    const postUsers = await prisma.POST_USER.findMany({
       where: {
         PostID: id,
       },
       select: {
-        EstimatedStartingTime: true,
-        StartingLocation: true,
-        EndingLocation: true,
-        NumOfMax: true,
-        NumOfJoined: true,
-        SmokingAllowed: true,
-        HugeLuggageAllowed: true,
-        PetAllowed: true,
-        DrunkAllowed: true,
-        PostDescription: true,
+        CarpoolUserID: true,
+        Role: true,
         CARPOOLUSER: {
           select: {
-            CarpoolUserID: true,
             Name: true,
             PhoneNumber: true,
           },
         },
-        POST_USER: {
+        POST: {
           select: {
-            Role: true,
+            CreatorID: true,
           },
         },
       },
     });
 
-    console.log(post);
-    return res.status(200).json(post);
+    const creatorIDs = postUsers.map((postUser) => postUser.POST.CreatorID);
+
+    const filteredPostUsers = postUsers.filter((postUser) => {
+      return !creatorIDs.includes(postUser.CarpoolUserID);
+    });
+
+    console.log(filteredPostUsers);
+    return res.status(200).json(filteredPostUsers);
   } catch (error) {
     return res.status(500).json({ message: "發生錯誤", error: error.message });
   }

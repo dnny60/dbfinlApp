@@ -4,9 +4,11 @@ import YourRecord from "../components/Record";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
 import { BrowserRouter } from "react-router-dom";
+import { useSession } from "next-auth/react";
 
 const YourRecordpage = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const { data: session } = useSession();
 
   const toggle = () => {
     setIsOpen(!isOpen);
@@ -17,7 +19,7 @@ const YourRecordpage = () => {
       <BrowserRouter>
         <Navbar toggle={toggle} />
         <Sidebar isOpen={isOpen} toggle={toggle} />
-        <YourRecord />
+        <YourRecord parm={session} />
       </BrowserRouter>
     </>
   );

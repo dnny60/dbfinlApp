@@ -1,12 +1,11 @@
 import styled from "styled-components";
-import image from "../../../public/images/image.jpg";
+
 import { Link } from "react-router-dom";
-// background-image: url("${image}");
 
 export const Container = styled.div`
   display: grid;
   justify-content: top;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   padding: 0 30px;
   height: 1000px;
   position: relative;
@@ -81,7 +80,7 @@ export const Infowrapper = styled.div`
   gap: 8px;
   font-size: 24px;
   height: auto;
-  width: 500px;
+  width: 350px;
   padding: 10px 10px;
   display: grid;
   justify-content: top;
@@ -135,7 +134,7 @@ export const CTextArea = styled.textarea`
   height: 100px;
 `;
 
-export const CButton = styled.div`
+export const CButton = styled(Link)`
   background: #1e81b0;
   padding: 10px 20px;
   border: none;
@@ -143,12 +142,14 @@ export const CButton = styled.div`
   color: #fff;
   font-size: 15px;
   cursor: pointer;
-  display: flex;
   text-align: center;
   white-space: nowrap;
   text-decoration: none;
   max-width: 80px;
   margin: 10px 19px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
   &:hover {
     transition: all 0.2s ease-in-out;
@@ -169,7 +170,7 @@ export const Carform = styled.form`
   background: hsla(0, 100%, 10%, 0.3);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
   height: auto;
-  width: 670px;
+  width: 450px;
   z-index: 1;
   margin: 0 auto;
   padding: 60px 40px;

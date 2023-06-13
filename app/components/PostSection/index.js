@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import moment from "moment";
 import { Button } from "../ButtonElement";
 import Image from "next/image";
 import Gif from "../../../public/images/clock.gif";
@@ -22,7 +23,7 @@ import axios from "axios"; // assume you are using axios
 
 // import useUser from '...' // import your hook for user information
 
-const PostSection = ({ param }) => {
+const PostSection = ({ param, session }) => {
   const router = useRouter();
   const [post, setPost] = useState({
     rideshareid: 1,
@@ -43,30 +44,23 @@ const PostSection = ({ param }) => {
     status: "Not Started",
   });
 
-  const [user, setUser] = useState({
-    name: "Winnie Huang",
-    phone: "0900-251-718",
-    userRole: "passenger",
-  });
-
-  const id = post.rideshareid;
+  const [user, setUser] = useState({});
 
   // 'userid' seems to be a boolean to check if there's a user or not. Let's just assume it's true.
-  const userid = true;
+  // const userid = false;
+  const [userid, setuserid] = useState(false);
+  const [isCreator, setIsCreator] = useState(false);
 
-  const Ontheroad = true;
-
+  // const Ontheroad = true;
+  const [Ontheroad, setOntheroad] = useState(false);
   const [data, setData] = useState(null);
   const [isLoading, setLoading] = useState(false);
 
   useEffect(() => {
     setLoading(true);
-    const id = parseInt({ param });
-    // const res = axios.post("/api/getpost", id);
-    // console.log(res);
-    // console.log(res.data);
-    // setData(res.post);
-    // setLoading(false);
+    var id = parseInt(param.id);
+    console.log(parseInt(id));
+
     fetch("/api/getpost", {
       method: "POST",
       headers: {
@@ -78,38 +72,61 @@ const PostSection = ({ param }) => {
       .then((data) => {
         setData(data);
         setLoading(false);
+        setIsCreator(data.CARPOOLUSER.CarpoolUserID === session.user.id); // Check if the user is the creator
+        console.log(data);
       });
-    // fetch("/api/searchpost", id)
-    //   .then((res) => res.json())
-    //   .then((data) => {
-    //     setData(data);
-    //     setLoading(false);
-    //   });
-    console.log(data);
-  }, []);
+
+    fetch("/api/getPostWaitList", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ id }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setUser(data);
+        setLoading(false);
+        setuserid(true);
+        console.log(data);
+      });
+
+    // console.log(data);
+  }, [param]);
+  const quitPost = async () => {
+    const userId = session.user.id.toString();
+    const postId = param.id.toString();
+
+    try {
+      const response = await axios.post("/api/quitPost", {
+        userId,
+        postId,
+      });
+      console.log(response.data);
+      router.push("/ridesharerecord"); // Redirect to "/ridesharerecord"
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const startPost = async () => {
+    const postId = param.id.toString();
+
+    try {
+      const response = await axios.post("/api/startPost", {
+        PostID: postId,
+      });
+
+      console.log(response.data);
+      setOntheroad(true);
+      // 根据需要进行处理
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   if (isLoading) return <p>Loading...</p>;
   if (!data) return <p>No profile data</p>;
-
-  // const res = await axios.post("/api/searchpost", { param });
-  // console.log(res);
-
-  // const quitRideshare = async () => {
-  //   try {
-  //     // Assuming you're using axios
-  //     const response = await axios.put(`/api/posts/${id}/quit`);
-  //     if (response.status === 200) {
-  //       setPost(prevPost => ({
-  //         ...prevPost,
-  //         NumOfJoined: prevPost.NumOfJoined - 1
-  //       }));
-  //     } else {
-  //       console.error('Failed to quit rideshare');
-  //     }
-  //   } catch (error) {
-  //     console.error('An error occurred:', error);
-  //   }
-  // };
 
   return (
     <>
@@ -135,9 +152,13 @@ const PostSection = ({ param }) => {
           <Infowrapper>
             <CarP>出發地: {data.StartingLocation}</CarP>
             <CarP>目的地: {data.EndingLocation}</CarP>
-            <CarP>出發時間: {data.EstimatedStartingTime}</CarP>
+
             <CarP>
-              目前人數: {post.NumOfJoined}/{post.NumOfMax}
+              出發時間:{" "}
+              {moment(data.EstimatedStartingTime).format("YYYY-MM-DD HH:mm:ss")}
+            </CarP>
+            <CarP>
+              目前人數: {data.NumOfJoined}/{data.NumOfMax}
             </CarP>
           </Infowrapper>
 
@@ -152,7 +173,16 @@ const PostSection = ({ param }) => {
           ) : (
             <>
               <Buttonwrap>
-                <Button to="/ridesharerecord">點擊退出此次共乘</Button>
+                {isCreator && !Ontheroad && (
+                  <Button onClick={startPost}>開始</Button>
+                )}
+                <Button
+                  onClick={() => {
+                    quitPost();
+                  }}
+                >
+                  点击退出此次共乘
+                </Button>
               </Buttonwrap>
             </>
           )}
@@ -161,28 +191,32 @@ const PostSection = ({ param }) => {
             <Hostwrap>
               <CarH3>共乘開團主揪</CarH3>
               <CarP>
-                {post.userRole === "driver" ? (
+                {data.POST_USER.Role === "driver" ? (
                   <BsCarFront />
                 ) : (
                   <BsFillPersonFill />
                 )}
-                {post.creatorName}
+                {data.CARPOOLUSER.Name}
               </CarP>
-              <CarP>電話：{post.creatorPhone}</CarP>
+              <CarP>電話：{data.CARPOOLUSER.PhoneNumber}</CarP>
             </Hostwrap>
             <Member>
               <CarH3>等待共乘中成員</CarH3>
               {userid && (
                 <>
-                  <CarP>
-                    {user.userRole === "driver" ? (
-                      <BsCarFront />
-                    ) : (
-                      <BsFillPersonFill />
-                    )}
-                    {user.name}
-                  </CarP>
-                  <CarP>電話：{user.phone}</CarP>
+                  {user.map((member) => (
+                    <React.Fragment key={member.CarpoolUserID}>
+                      <CarP>
+                        {member.Role === "driver" ? (
+                          <BsCarFront />
+                        ) : (
+                          <BsFillPersonFill />
+                        )}
+                        {member.CARPOOLUSER.Name}
+                      </CarP>
+                      <CarP>電話：{member.CARPOOLUSER.PhoneNumber}</CarP>
+                    </React.Fragment>
+                  ))}
                 </>
               )}
             </Member>

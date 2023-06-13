@@ -19,7 +19,7 @@ export const Container = styled.div`
     right: 0;
     bottom: 0;
     left: 0;
-    background-image: url("${image}");
+    background-image: url("/images/image.jpg");
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
