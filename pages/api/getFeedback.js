@@ -26,7 +26,8 @@ export default async function handler(req, res) {
     });
     const feedbackData = feedback.map((item) => ({
       PostID: item.PostID,
-      Feedback: new Array(item.FEEDBACK[0].Feedback),
+      Feedback: item.FEEDBACK.map((item) => item.Feedback),
+      // Feedback: new Array(item.FEEDBACK[0].Feedback),
       // 如果需要其他字段，请在这里添加
     }));
     console.log(feedback[0]);

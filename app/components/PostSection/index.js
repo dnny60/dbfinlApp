@@ -61,6 +61,21 @@ const PostSection = ({ param, session }) => {
     var id = parseInt(param.id);
     console.log(parseInt(id));
 
+    fetch("/api/checkStarted", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ id }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data != null) {
+          setOntheroad(true);
+        }
+        console.log(data);
+      });
+
     fetch("/api/getpost", {
       method: "POST",
       headers: {
@@ -137,7 +152,8 @@ const PostSection = ({ param, session }) => {
         body: JSON.stringify({ PostID }),
       });
 
-      router.push("/feedback");
+      var link = "/feedback/" + PostID;
+      router.push(link);
     } catch (error) {
       console.log(error);
     }

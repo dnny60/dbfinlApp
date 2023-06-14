@@ -4,7 +4,7 @@ import YourRecord from "../components/Record";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
 import { BrowserRouter } from "react-router-dom";
-import { useSession } from "next-auth/react";
+import { useSession, SessionProvider } from "next-auth/react";
 
 const YourRecordpage = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -16,11 +16,13 @@ const YourRecordpage = () => {
 
   return (
     <>
-      <BrowserRouter>
-        <Navbar toggle={toggle} />
-        <Sidebar isOpen={isOpen} toggle={toggle} />
-        <YourRecord parm={session} />
-      </BrowserRouter>
+      <SessionProvider>
+        <BrowserRouter>
+          <Navbar toggle={toggle} />
+          <Sidebar isOpen={isOpen} toggle={toggle} />
+          <YourRecord parm={session} />
+        </BrowserRouter>
+      </SessionProvider>
     </>
   );
 };
