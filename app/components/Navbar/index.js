@@ -38,23 +38,23 @@ const Navbar = ({ toggle }) => {
                 <>
                   <NavItem>
                     <NavLinks>
-                      <Link href="/ridesharerecord">YourRecord</Link>
+                      <Link href="/ridesharerecord">你的記錄</Link>
                     </NavLinks>
                   </NavItem>
                   <NavItem>
                     <NavLinks>
-                      <Link href="/carpool">查看</Link>
+                      <Link href="/carpool">查看共乘</Link>
                     </NavLinks>
                   </NavItem>
                   <NavItem>
                     <NavLinks>
-                      <Link href="/createCarpool">創建</Link>
+                      <Link href="/createCarpool">創建共乘</Link>
                     </NavLinks>
                   </NavItem>
 
                   <NavItem>
                     <NavLinks>
-                      <a onClick={signOut}>Sign out</a>
+                      <a onClick={signOut}>登出</a>
                     </NavLinks>
                   </NavItem>
                 </>
@@ -84,7 +84,7 @@ const Navbar = ({ toggle }) => {
               {session?.user ? (
                 // 顯示用戶名
                 <UserGreeting>
-                  Hi, {session.user.name}
+                  您好, {session.user.name}
                   <Link href="/settings">
                     <Profileicon />
                   </Link>

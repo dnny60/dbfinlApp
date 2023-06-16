@@ -149,7 +149,7 @@ const YourRecord = ({ parm }) => {
         // }));
 
         setRidesharefeedback(data);
-        console.log(Ridesharefeedback);
+        console.log(ridesharefeedback);
         // setDisplayedRideshares(ridesharesData);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -229,7 +229,7 @@ const YourRecord = ({ parm }) => {
     <>
       <Container>
         <Carform>
-          <h1>Your Rideshares</h1>
+          <h1>你創建的共乘</h1>
           <SearchBar
             type="text"
             placeholder="Search..."
@@ -241,7 +241,7 @@ const YourRecord = ({ parm }) => {
                 <FP>出發地：{rideshare.startingLocation}</FP>
                 <FP>目的地: {rideshare.endingLocation}</FP>
                 <FP>出發時間：{rideshare.estimatedStartingTime}</FP>
-                <FP>Creator: {rideshare.creatorName}</FP>
+                <FP>創建者: {rideshare.creatorName}</FP>
               </group>
               <group>
                 <CButton onClick={() => handleEdit(rideshare.id)}>Edit</CButton>
@@ -255,14 +255,14 @@ const YourRecord = ({ parm }) => {
           ))}
         </Carform>
         <Carform>
-          <h1>Rideshares you've joined</h1>
+          <h1>已加入的共乘</h1>
           {joinedRideshares.map((rideshare) => (
             <Infowrapper key={rideshare.id}>
               <group>
                 <FP>出發地: {rideshare.startingLocation}</FP>
                 <FP>目的地: {rideshare.endingLocation}</FP>
                 <FP>出發時間：{rideshare.estimatedStartingTime}</FP>
-                <FP>Creator: {rideshare.creatorName}</FP>
+                <FP>創建者: {rideshare.creatorName}</FP>
               </group>
 
               <group>
@@ -279,7 +279,7 @@ const YourRecord = ({ parm }) => {
 
         {ridesharefeedback && Array.isArray(ridesharefeedback) ? (
           <Carform>
-            <h1>Your Feedback</h1>
+            <h1>回饋</h1>
             {ridesharefeedback.map((feedback) => (
               <Infowrapper key={feedback.PostID}>
                 <group>

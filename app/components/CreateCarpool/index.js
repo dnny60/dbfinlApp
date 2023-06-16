@@ -72,7 +72,7 @@ const Createcarpool = ({ onCreate }) => {
         StartingLocation: StartingLocation,
         Role: Role,
       });
-      console.log(response);
+      console.log(response.data.post.PostID);
       // res.redirect(307, "/carpool");
       // if (response.ok) {
       //   const data = await response.json();
@@ -80,7 +80,8 @@ const Createcarpool = ({ onCreate }) => {
       // } else {
       //   console.error("create post失敗");
       // }
-      router.push("/carpool");
+      var link = "/post/" + response.data.post.PostID;
+      router.push(link);
     } catch (error) {
       console.error("發生錯誤", error);
     }

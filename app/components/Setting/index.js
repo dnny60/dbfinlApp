@@ -126,11 +126,11 @@ const Setting = ({ parm, parm2 }) => {
               <span style={{ marginRight: "10px" }}>
                 <CgProfile />
               </span>
-              <span> User Settings</span>
+              <span> 個人檔案</span>
             </FormH1>
             <FormRow>
               <FormColumn>
-                <FormLabel htmlFor="name">Username</FormLabel>
+                <FormLabel htmlFor="name">用戶名</FormLabel>
                 <FormInput
                   type="text"
                   name="name"
@@ -139,7 +139,7 @@ const Setting = ({ parm, parm2 }) => {
                   onChange={handleChange}
                   disabled={!isEditing}
                 />
-                <FormLabel htmlFor="email">Email</FormLabel>
+                <FormLabel htmlFor="email">電子郵件</FormLabel>
                 <FormInput
                   type="email"
                   name="email"
@@ -148,7 +148,7 @@ const Setting = ({ parm, parm2 }) => {
                   onChange={handleChange}
                   disabled={!isEditing}
                 />
-                <FormLabel htmlFor="phone">Phone</FormLabel>
+                <FormLabel htmlFor="phone">電話號碼</FormLabel>
                 <FormInput
                   type="tel"
                   name="phone"
@@ -157,7 +157,7 @@ const Setting = ({ parm, parm2 }) => {
                   onChange={handleChange}
                   disabled={!isEditing}
                 />
-                <FormLabel htmlFor="password">Password</FormLabel>
+                <FormLabel htmlFor="password">密碼</FormLabel>
                 <FormInput
                   type="password"
                   name="password"
@@ -168,7 +168,7 @@ const Setting = ({ parm, parm2 }) => {
                 />
               </FormColumn>
               <FormColumn>
-                <FormLabel htmlFor="carModel">Car Model</FormLabel>
+                <FormLabel htmlFor="carModel">車的型號</FormLabel>
                 <FormInput
                   type="text"
                   name="carModel"
@@ -177,7 +177,7 @@ const Setting = ({ parm, parm2 }) => {
                   onChange={handleChange}
                   disabled={!isEditing}
                 />
-                <FormLabel htmlFor="licensePlate">License Plate</FormLabel>
+                <FormLabel htmlFor="licensePlate">車牌號碼</FormLabel>
                 <FormInput
                   type="text"
                   name="licensePlate"
@@ -189,10 +189,10 @@ const Setting = ({ parm, parm2 }) => {
               </FormColumn>
             </FormRow>
             {isEditing ? (
-              <SubmitButton type="submit">Save Changes</SubmitButton>
+              <SubmitButton type="submit">儲存</SubmitButton>
             ) : (
               <FormButton type="button" onClick={handleEdit}>
-                Edit
+                按一下以編輯
               </FormButton>
             )}
           </Form>

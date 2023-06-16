@@ -16,7 +16,7 @@ const Postpage = ({ params }) => {
   };
   return (
     <>
-      <SessionProvider>
+      <SessionProvider session={session}>
         <BrowserRouter>
           <Navbar toggle={toggle} />
 

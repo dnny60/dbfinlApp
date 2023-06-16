@@ -59,55 +59,68 @@ const PostSection = ({ param, session }) => {
   useEffect(() => {
     setLoading(true);
     var id = parseInt(param.id);
+    // const userID = session.user.id;
     console.log(parseInt(id));
+    setOntheroad(false);
+    // console.log(pageProps);
 
-    fetch("/api/checkStarted", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ id }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data != null) {
-          setOntheroad(true);
-        }
-        console.log(data);
-      });
+    const fetchData = async () => {
+      const checkStarted = await fetch("/api/checkStarted", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data.StartingTime);
+          if (data.StartingTime != null) {
+            setOntheroad(true);
+          }
+        });
 
-    fetch("/api/getpost", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ id }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setData(data);
-        setLoading(false);
-        setIsCreator(data.CARPOOLUSER.CarpoolUserID === session.user.id); // Check if the user is the creator
-        console.log(data);
-      });
+      const getPost = await fetch("/api/getpost", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          setData(data);
+          setLoading(false);
+          console.log(session);
+          setIsCreator(data.CARPOOLUSER.CarpoolUserID == session.user.id); // Check if the user is the creator
+          // console.log(data);
+        });
 
-    fetch("/api/getPostWaitList", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ id }),
-    })
-      .then((res) => res.json())
+      const getPostWaitList = await fetch("/api/getPostWaitList", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          setUser(data);
+          console.log(data);
+          setLoading(false);
+          setuserid(true);
+          // console.log(data);
+        });
+    };
+
+    fetchData()
       .then((data) => {
-        setUser(data);
-        setLoading(false);
-        setuserid(true);
         console.log(data);
-      });
+      })
+      .catch(console.error);
 
     // console.log(data);
-  }, [param]);
+  }, [param, session]);
   const quitPost = async () => {
     const userId = session.user.id.toString();
     const postId = param.id.toString();
@@ -215,7 +228,7 @@ const PostSection = ({ param, session }) => {
                     quitPost();
                   }}
                 >
-                  点击退出此次共乘
+                  點擊退出此次共乘
                 </Button>
               </Buttonwrap>
             </>
