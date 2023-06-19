@@ -36,11 +36,9 @@ const HeroSection = () => {
         <HeroH1>Carry You</HeroH1>
         <HeroH1>政大共乘系統</HeroH1>
 
-        <HeroP>
-          晚上想吃海底撈，卻找不到人一起共乘回家嗎？
-          <p>沒問題，政大共乘系統為您服務！</p>
-        </HeroP>
-        <HeroP>Sign up for a new account today</HeroP>
+        <HeroP>晚上想吃海底撈，卻找不到人一起共乘回家嗎？</HeroP>
+        <HeroP>沒問題，政大共乘系統為您服務！</HeroP>
+        <HeroP>馬上註册一個賬戶吧！</HeroP>
         <HeroBtnWrapper>
           <Button
             onMouseEnter={onHover}

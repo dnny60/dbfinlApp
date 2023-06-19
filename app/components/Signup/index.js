@@ -34,6 +34,7 @@ const SignUp = () => {
 
       if (response.ok) {
         const data = await response.json();
+        router.push("/carpool");
         console.log(data); // 可以在控制台中檢查回傳的資料
       } else {
         console.error("註冊失敗");

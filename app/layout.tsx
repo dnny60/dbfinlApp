@@ -16,6 +16,9 @@ const inter = Inter({ subsets: ["latin"] });
 export default function RootLayoutApp({ session, children }) {
   return (
     <html lang="en">
+      <head>
+        <title>CarryU 政大共乘系統</title>
+      </head>
       <body>
         <SessionProvider session={session}>
           <div className={inter.className}>{children}</div>

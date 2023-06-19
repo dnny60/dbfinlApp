@@ -14,6 +14,7 @@ import {
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 // import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 const SignIn = () => {
   const [error, setError] = useState("");
@@ -46,16 +47,17 @@ const SignIn = () => {
     //   router.push(callbackUrl);
     // }
   };
+  const router = useRouter();
 
   return (
     <>
       <Container>
         <FormWrap>
-          <Icon to="/">CarryU</Icon>
+          <Icon onClick={() => router.push("/")}>CarryU</Icon>
           {!!error && <p>{error}</p>}
           <FormContent>
             <Form onSubmit={handleSubmit}>
-              <FormH1>Sign in your account</FormH1>
+              <FormH1>請登入您的賬戶</FormH1>
               <FormLabel htmlFor="for"> Email</FormLabel>
               <FormInput
                 type="email"

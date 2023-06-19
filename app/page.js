@@ -14,9 +14,11 @@ const Home = () => {
 
   return (
     <>
-      <Navbar />
+      <div>
+        <Navbar />
 
-      <HeroSection />
+        <HeroSection />
+      </div>
     </>
   );
 };

@@ -62,12 +62,17 @@ const Navbar = ({ toggle }) => {
                 <>
                   <NavItem>
                     <NavLinks>
-                      <Link href="/discover">Discover</Link>
+                      <Link href="/ridesharerecord">你的記錄</Link>
                     </NavLinks>
                   </NavItem>
                   <NavItem>
                     <NavLinks>
-                      <Link href="/service">Services</Link>
+                      <Link href="/carpool">查看共乘</Link>
+                    </NavLinks>
+                  </NavItem>
+                  <NavItem>
+                    <NavLinks>
+                      <Link href="/createCarpool">創建共乘</Link>
                     </NavLinks>
                   </NavItem>
                   <NavItem>
